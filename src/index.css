@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.main {
+    width: 1140px;
+}
+div {
+    box-sizing: border-box;
+}
+input, textarea {
+    outline: none;
+    border: none
+}
+.main-bg {
+    background-color: #5CB85C;
+}
+.main-bg:hover {
+    background-color: #449D44;
+}
+.main-color {
+    color: #5CB85C;
+}
