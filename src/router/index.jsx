@@ -1,20 +1,13 @@
-import React from "react";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
-
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Article from "../pages/Article";
-import Auth from "../components/Auth";
-import User from "../pages/User";
-import Setting from "../pages/Setting";
-import CreateArticle from "../pages/CreateArticle";
-import Layout from "../components/Layout";
+import { createBrowserRouter } from "react-router-dom"
+import Home from "../pages/Home"
+import Login from "../pages/Login"
+import Register from "../pages/Register"
+import Article from "../pages/Article"
+import Auth from "../components/Auth"
+import User from "../pages/User"
+import Setting from "../pages/Setting"
+import CreateArticle from "../pages/CreateArticle"
+import Layout from "../components/Layout"
 
 // 创建路由对象
 export const router = createBrowserRouter([
@@ -23,7 +16,6 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        // path: "/",
         index: true,
         element: <Home />,
       },
@@ -69,4 +61,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+])
