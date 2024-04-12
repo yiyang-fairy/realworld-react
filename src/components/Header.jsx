@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../utils/user";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -14,22 +14,47 @@ export default function Header() {
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
-  useEffect(() => {
-    const pathname = location.pathname.split("/")[1] || "home";
-    document.querySelectorAll(".header-item").forEach((item) => {
-      item.classList.remove("text-gray-500");
-    });
-    if(pathname !== 'article') {
-       document.querySelector(`.${pathname}`).classList.add("text-gray-500");
-    }
-  }, [location]);
+
+  const navList = [
+    {
+      name: "Sign in",
+      url: "/login",
+      needToken: false,
+    },
+    {
+      name: "Sign up",
+      url: "/register",
+      needToken: false,
+    },
+    {
+      name: "New Article",
+      url: "/create",
+      needToken: true,
+    },
+    {
+      name: "Setting",
+      url: "/setting",
+      needToken: true,
+    },
+    {
+      name: (
+        <>
+          <span className=" w-10 h-10 rounded-full overflow-hidden mr-2">
+            <img className="w-full h-full" src={userImage} alt="" />
+          </span>
+          <span>{username}</span>
+        </>
+      ),
+      url: `/user/${username}`,
+      needToken: true,
+    },
+  ];
 
   return (
     <div className="w-full h-14 flex items-center justify-center">
       <div className="main  flex justify-between items-center">
         <div
-          className="text-2xl font-black main-color"
+          className="text-2xl font-black main-color cursor-pointer"
           onClick={() => {
             navigate("/");
           }}
@@ -38,63 +63,33 @@ export default function Header() {
         </div>
         <div className="flex justify-center text-base">
           <div
-            className=" mx-5 flex justify-center items-center truncate header-item home text-gray-300  hover:text-gray-500"
-            onClick={(e) => {
+            className=" mx-5 flex justify-center items-center truncate header-item cursor-pointer text-gray-300  hover:text-gray-500"
+            onClick={() => {
               navigate("/");
             }}
           >
             Home
           </div>
-          {!localStorage.getItem("token") ? (
-            <>
+          {navList.map((item) => {
+            const show = !!localStorage.getItem("token") === item.needToken;
+            const hasTokenClass =
+              "mx-5 flex justify-center items-center truncate header-item create text-gray-300 cursor-pointer  hover:text-gray-500";
+            const noTokenClass =
+              "mx-5 truncate header-item login text-gray-300 cursor-pointer  hover:text-gray-500";
+            return show ? (
               <div
-                className="mx-5 truncate header-item login text-gray-300  hover:text-gray-500"
-                onClick={(e) => {
-                  navigate("/login");
+                key={item.name}
+                className={item.needToken ? hasTokenClass : noTokenClass}
+                onClick={() => {
+                  navigate(item.url);
                 }}
               >
-                Sign in
+                {item.name}
               </div>
-              <div
-                className="mx-5 truncate header-item register text-gray-300  hover:text-gray-500"
-                onClick={(e) => {
-                  navigate("/register");
-                }}
-              >
-                Sign up
-              </div>
-            </>
-          ) : (
-            <>
-              <div
-                className="mx-5 flex justify-center items-center truncate header-item create text-gray-300  hover:text-gray-500"
-                onClick={(e) => {
-                  navigate("/create");
-                }}
-              >
-                New Article
-              </div>
-              <div
-                className="mx-5 flex justify-center items-center truncate header-item setting text-gray-300  hover:text-gray-500"
-                onClick={(e) => {
-                  navigate("/setting");
-                }}
-              >
-                Setting
-              </div>
-              <div
-                className="mx-5 flex justify-center items-center truncate header-item user text-gray-300  hover:text-gray-500"
-                onClick={(e) => {
-                  navigate(`/user/${username}`);
-                }}
-              >
-                <span className=" w-10 h-10 rounded-full overflow-hidden mr-2">
-                  <img className="w-full h-full" src={userImage} alt="" />
-                </span>
-                <span>{username}</span>
-              </div>
-            </>
-          )}
+            ) : (
+              ""
+            );
+          })}
         </div>
       </div>
     </div>
