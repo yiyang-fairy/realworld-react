@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../utils/user";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -14,6 +14,12 @@ export default function Header() {
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState("");
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const [pathname, setPathname] = useState("")
+  useEffect(() => {
+    setPathname(location.pathname.split("/")[1] || "home")
+  }, [location, pathname]);
 
   const navList = [
     {
@@ -50,6 +56,8 @@ export default function Header() {
     },
   ];
 
+  const navItemClass = "mx-5 flex justify-center items-center truncate text-gray-300 cursor-pointer hover:text-gray-500"
+
   return (
     <div className="w-full h-14 flex items-center justify-center">
       <div className="main  flex justify-between items-center">
@@ -63,7 +71,7 @@ export default function Header() {
         </div>
         <div className="flex justify-center text-base">
           <div
-            className=" mx-5 flex justify-center items-center truncate header-item cursor-pointer text-gray-300  hover:text-gray-500"
+            className={navItemClass + (pathname === "home" ? " text-gray-500 ": "")}
             onClick={() => {
               navigate("/");
             }}
@@ -72,14 +80,11 @@ export default function Header() {
           </div>
           {navList.map((item) => {
             const show = !!localStorage.getItem("token") === item.needToken;
-            const hasTokenClass =
-              "mx-5 flex justify-center items-center truncate header-item create text-gray-300 cursor-pointer  hover:text-gray-500";
-            const noTokenClass =
-              "mx-5 truncate header-item login text-gray-300 cursor-pointer  hover:text-gray-500";
+            const activeClass = item.url.includes(pathname) ? " text-gray-500 ": ""
             return show ? (
               <div
                 key={item.name}
-                className={item.needToken ? hasTokenClass : noTokenClass}
+                className={navItemClass + activeClass}
                 onClick={() => {
                   navigate(item.url);
                 }}
